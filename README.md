@@ -6,7 +6,7 @@ A webapp using MERN stack for a real-time dashboard to display user data.
 
 Here is a live demo : [here](https://10md.thedeveloperx.com/)
 <br/>
-`NOTE:` If you add a new user and dashboard has already million user then it may
+`NOTE:` If you add a new user and dashboard has already million users then it may
 take a while to reflect that change on the dashboard because of this app architecture.
 
 ## Screenshot

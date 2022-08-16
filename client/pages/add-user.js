@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
-import axios from 'axios';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import InputLabel from '@mui/material/InputLabel';
@@ -23,7 +22,7 @@ import { NavbarSection } from '../components/styles/navbarstyles';
 import { Form, Title, FormItemSpace } from '../components/styles/formstyles';
 
 import { countryList, lastActiveDd } from '../utils/input-form-utils';
-import { SEVER_URL } from '../config';
+import UserService from '../services/user';
 
 export default function () {
   const router = useRouter();
@@ -41,25 +40,22 @@ export default function () {
       totalActive: data.totalActive * 1000 * 60 * 60,
     };
 
-    await axios
-      .post(`${SEVER_URL}/api/users`, _data)
-      .then((response) => {
-        console.log(response.data);
-        if (response.data.success) {
-          router.push('/');
+    try {
+      const response = await UserService.post(_data);
+      if (response.data.success) {
+        router.push('/');
+      } else {
+        // console.log(response.data);
+        if (response.data.nameExist) {
+          alert('This username is already exist!');
+          setNameTaken(true);
         } else {
-          console.log(response.data);
-          if (response.data.nameExist) {
-            alert('This username is already exist!');
-            setNameTaken(true);
-          } else {
-            alert('Error occured while saving data! Please try again later.');
-          }
+          alert('Error occured while saving data! Please try again later.');
         }
-      })
-      .catch(({ response }) => {
-        alert('Error occured while saving data! Please try again later.');
-      });
+      }
+    } catch ({ response }) {
+      alert('Error occured while saving data! Please try again later.');
+    }
 
     setSubmitting(false);
   };

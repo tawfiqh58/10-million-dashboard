@@ -6,7 +6,7 @@ const cookieParserSocket = require('socket.io-cookie-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const redisConn = require('./utils/redis-client');
-const { getFromRedis } = require('./service/dashboard-service');
+const { getDashboardData } = require('./services/dashboard-service');
 require('dotenv').config();
 
 const app = express();
@@ -17,7 +17,7 @@ app.use(cookieParser());
 app.use(cors());
 
 app.use('/api/faker', require('./routes/faker'));
-app.use('/api/user', require('./routes/user'));
+app.use('/api/users', require('./routes/user'));
 app.use('/api/dashboard', require('./routes/dashboard'));
 
 const port = process.env.PORT || 5000;
@@ -31,7 +31,7 @@ global.io = io.use(cookieParserSocket());
 global.io = io.on('connection', async (socket) => {
   // console.log('A socket user connected');
   try {
-    const data = await getFromRedis();
+    const data = await getDashboardData();
     socket.emit('dashboard', data);
   } catch (e) {
     console.log('socket send error!');

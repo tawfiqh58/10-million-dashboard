@@ -96,10 +96,11 @@ async function bulkUserInsertion(dbUserCount, requestedFakeUserCount) {
 // with pending message
 async function insertFakeUserToMongoDB(requestedCount) {
   return new Promise(async (resolve, reject) => {
+
     // First check current database user count
     const currentDBUserCount = await User.countDocuments();
 
-    // If user count exceed 10M then
+    // If user count exceed 10M then 
     // don't allow fake user insertion
     if (currentDBUserCount > TEN_MILLION_USER) {
       resolve({ message: 'Database already has 10 million user.' });
@@ -137,17 +138,14 @@ async function insertFakeUserToMongoDB(requestedCount) {
         // higher than 'SMALL_AMOUNT_FAKE_USER'
 
         // This may take time to finish insertion
-        bulkUserInsertion(currentDBUserCount, userCreationCount)
-          .then((fulfill) => {
+        bulkUserInsertion(currentDBUserCount, userCreationCount).then(
+          (err, status) => {
             // Ignore error and re-order whatever the DB has.
 
             // Update dashboard status
             userCreated();
-          })
-          .catch((reason) => {
-            // Update dashboard status
-            userCreated();
-          });
+          }
+        );
 
         resolve({
           message:

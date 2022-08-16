@@ -42,7 +42,7 @@ export default function () {
     };
 
     await axios
-      .post(`${SEVER_URL}/api/user`, _data)
+      .post(`${SEVER_URL}/api/users`, _data)
       .then((response) => {
         console.log(response.data);
         if (response.data.success) {
@@ -50,6 +50,7 @@ export default function () {
         } else {
           console.log(response.data);
           if (response.data.nameExist) {
+            alert('This username is already exist!');
             setNameTaken(true);
           } else {
             alert('Error occured while saving data! Please try again later.');

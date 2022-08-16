@@ -1,7 +1,7 @@
 const {
   insertFakeUserToMongoDB,
   cleanUpDB,
-} = require('../service/fake-user-service');
+} = require('../services/fake-user-service');
 
 module.exports = {
   generateFakeUser: async (req, res) => {

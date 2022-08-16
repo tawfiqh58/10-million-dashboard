@@ -13,36 +13,44 @@ export default function FeaturedInfo({ data }) {
   const [status, setStatus] = useState();
 
   useEffect(() => {
-    if (data) {
-      let _status = [
-        {
-          title: 'Daily',
-          dollar: data.daily,
-          gradient: ['rgba(152, 82, 240, 1) ', 'rgba(90, 1, 201, 1)'],
-          subTitle: 'Daily active user',
-        },
-        {
-          title: 'Weekly',
-          dollar: data.weekly,
-          gradient: ['rgba(31, 208, 112, 1)', 'rgba(1, 169, 68, 1)'],
-          subTitle: 'Weekly active user',
-        },
-        {
-          title: 'Monthly',
-          dollar: data.monthly,
-          gradient: ['rgba(0, 149, 235, 1)', 'rgba(0, 59, 210, 1)'],
-          subTitle: 'Monthly active user',
-        },
-        {
-          title: 'Total',
-          dollar: data.total,
-          gradient: ['rgba(243, 144, 52, 1)', 'rgba(255, 42, 39, 1))'],
-          subTitle: 'Total user',
-        },
-      ];
+    let _data = {};
 
-      setStatus(_status);
-    }
+    // Initialize data if null
+    if (!data) {
+      _data.daily = 0;
+      _data.weekly = 0;
+      _data.monthly = 0;
+      _data.total = 0;
+    } else _data = data;
+
+    let _status = [
+      {
+        title: 'Daily',
+        dollar: _data.daily,
+        gradient: ['rgba(152, 82, 240, 1) ', 'rgba(90, 1, 201, 1)'],
+        subTitle: 'Daily active user',
+      },
+      {
+        title: 'Weekly',
+        dollar: _data.weekly,
+        gradient: ['rgba(31, 208, 112, 1)', 'rgba(1, 169, 68, 1)'],
+        subTitle: 'Weekly active user',
+      },
+      {
+        title: 'Monthly',
+        dollar: _data.monthly,
+        gradient: ['rgba(0, 149, 235, 1)', 'rgba(0, 59, 210, 1)'],
+        subTitle: 'Monthly active user',
+      },
+      {
+        title: 'Total',
+        dollar: _data.total,
+        gradient: ['rgba(243, 144, 52, 1)', 'rgba(255, 42, 39, 1))'],
+        subTitle: 'Total user',
+      },
+    ];
+
+    setStatus(_status);
   }, [data]);
 
   return (

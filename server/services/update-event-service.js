@@ -8,10 +8,24 @@ const userCreated = async () => {
   try {
     const dashboardData = await getFromMongoDB();
 
-    // STORE IT TO REDIS
+    // Update redis state
     await redisDB.Client.set('dashboard', JSON.stringify(dashboardData));
 
-    // BROADCAST DASHBOARD UPDATE
+    // Broadcast new changes
+    global.io.emit('dashboard', { success: true, data: dashboardData });
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+const userDeleted = async () => {
+  try {
+    const dashboardData = await getFromMongoDB();
+
+    // Update redis state
+    await redisDB.Client.set('dashboard', JSON.stringify(dashboardData));
+
+    // Broadcast new changes
     global.io.emit('dashboard', { success: true, data: dashboardData });
   } catch (e) {
     console.log(e);
@@ -83,6 +97,7 @@ const getFromMongoDB = () => {
           },
         },
       ]);
+      
       const dashboardData = {
         topCountriesByUser,
         devicesCount,
@@ -98,4 +113,4 @@ const getFromMongoDB = () => {
     }
   });
 };
-module.exports = { getFromMongoDB, userCreated };
+module.exports = { getFromMongoDB, userCreated, userDeleted };

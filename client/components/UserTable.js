@@ -17,14 +17,10 @@ import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Switch from '@mui/material/Switch';
-import AutoGraphIcon from '@mui/icons-material/AutoGraph';
-import TimelineIcon from '@mui/icons-material/Timeline';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
-
+import UserService from '../services/user';
 import { ItemCard } from './styles/dashboardstyles';
 
 function removeDecimalZero(num) {
@@ -32,7 +28,8 @@ function removeDecimalZero(num) {
   else return num;
 }
 
-function createData(name, country, email, device, hrs) {
+function createData(name, country, email, device, hrs, id) {
+  if (!id) return null;
   let spentHrs = hrs / (1000 * 60 * 60);
   let spentHrsRounded = spentHrs.toFixed(1);
   let strHr =
@@ -43,6 +40,7 @@ function createData(name, country, email, device, hrs) {
     email,
     device,
     totalActive: strHr,
+    id,
   };
 }
 
@@ -170,7 +168,7 @@ EnhancedTableHead.propTypes = {
 };
 
 const EnhancedTableToolbar = (props) => {
-  const { numSelected } = props;
+  const { numSelected, onDelete } = props;
 
   return (
     <Toolbar
@@ -208,7 +206,7 @@ const EnhancedTableToolbar = (props) => {
 
       {numSelected > 0 ? (
         <Tooltip title="Delete">
-          <IconButton>
+          <IconButton onClick={onDelete}>
             <DeleteIcon />
           </IconButton>
         </Tooltip>
@@ -237,15 +235,17 @@ export default function EnhancedTable({ data }) {
 
   React.useEffect(() => {
     if (data) {
-      const rows = data.map((val) =>
-        createData(
+      const rows = data.map((val) => {
+        const item = createData(
           val.fullName,
           val.country,
           val.email,
           val.device,
-          val.totalActive
-        )
-      );
+          val.totalActive,
+          val._id
+        );
+        if (item) return item;
+      });
       setRows(rows);
     }
   }, [data]);
@@ -258,19 +258,19 @@ export default function EnhancedTable({ data }) {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.name);
+      const newSelecteds = rows.map((n) => n.id);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
+  const handleClick = (event, uid) => {
+    const selectedIndex = selected.indexOf(uid);
     let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, uid);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -303,7 +303,35 @@ export default function EnhancedTable({ data }) {
   return (
     <ItemCard>
       <Paper sx={{ mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <EnhancedTableToolbar
+          numSelected={selected.length}
+          onDelete={() => {
+            // console.log(selected);
+            if (selected.length > 1) {
+              UserService.deleteMany(selected)
+                .then((res) => {
+                  // console.log(res.data);
+                  setSelected([]);
+                  // alert('Successfull');
+                })
+                .catch(({ response }) => {
+                  // console.log(response);
+                  alert(response);
+                });
+            } else if (selected.length === 1) {
+              UserService.delete(selected[0])
+                .then((res) => {
+                  // console.log(res.data);
+                  setSelected([]);
+                  // alert('Successfull');
+                })
+                .catch(({ response }) => {
+                  // console.log(response);
+                  alert(response);
+                });
+            }
+          }}
+        />
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
@@ -324,17 +352,17 @@ export default function EnhancedTable({ data }) {
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.name);
+                  const isItemSelected = isSelected(row.id);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.name)}
+                      onClick={(event) => handleClick(event, row.id)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={`${row.name}-${index}`}
+                      key={`top-user-${row.id}`}
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">

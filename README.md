@@ -6,14 +6,14 @@ A webapp using MERN stack for a real-time dashboard to display user data.
 
 Here is a live demo : [here](https://10md.thedeveloperx.com/)
 <br/>
-NOTE: When user count is high and you add a new user then it may
-take a while to reflect that change on the dashboard.
+`NOTE:` If you add a new user and dashboard has already million user then it may
+take a while to reflect that change on the dashboard because of this app architecture.
 
 ## Screenshot
 
 <p align="center">
-  <img src="./images/desktop-dashboard-ss.png" style="margin-right:12px"/>
-  <img src="./images/mobile-dashboard-ss.png" />
+  <img src="./screenshots/desktop-dashboard.png" style="margin-right:12px"/>
+  <img src="./screenshots/mobile-dashboard.png" />
 </p>
 <br/>
 
@@ -40,7 +40,7 @@ request may take a while to get data from server but most of the time user will 
 cache.
 
 <p align="center">
-  <img src="./images/system-design.png" />
+  <img src="./screenshots/system-design.png" />
 </p>
 
 <br/>

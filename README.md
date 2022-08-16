@@ -1,18 +1,14 @@
 # MERN Real-time Dashboard with Redis
 
-<table>
-<tr>
-<td>
-  A webapp using MERN stack for a real-time dashboard to display user data.
-</td>
-</tr>
-</table>
+A webapp using MERN stack for a real-time dashboard to display user data.
 
 ## Live
 
 Here is a live demo : [here](https://10md.thedeveloperx.com/)
+NOTE: When user count is high and you add a new user then it may
+take a while to reflect that change on the dashboard.
 
-## Site View
+## Screenshot
 
 <p align="center">
   <img src="./images/desktop-dashboard-ss.png" style="margin-right:12px"/>

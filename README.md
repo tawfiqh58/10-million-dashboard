@@ -5,6 +5,7 @@ A webapp using MERN stack for a real-time dashboard to display user data.
 ## Live
 
 Here is a live demo : [here](https://10md.thedeveloperx.com/)
+<br/>
 NOTE: When user count is high and you add a new user then it may
 take a while to reflect that change on the dashboard.
 
@@ -51,6 +52,7 @@ To start server first you need to install all the dependency
 ```
 cd server
 ```
+
 ```
 npm install
 ```

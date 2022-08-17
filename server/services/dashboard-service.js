@@ -22,7 +22,10 @@ async function getDashboardData() {
         return resolve({ success: true, data: dashboardData });
       } catch (e) {
         console.log(e);
-        reject({ res: { message: 'Internal server error' } });
+        reject({
+          success: false,
+          message: 'Internal server error',
+        });
       }
     }
   });

@@ -22,12 +22,7 @@ async function createUser(data) {
         message: 'User has been created successfully.',
       });
     } catch (e) {
-      reject({
-        res: {
-          success: false,
-          message: 'Internal server error!',
-        },
-      });
+      reject(e);
     }
   });
 }
@@ -46,12 +41,7 @@ async function checkUsername(username) {
       // 'username' not exist.
       return resolve(false);
     } catch (e) {
-      reject({
-        res: {
-          success: false,
-          message: 'Internal server error!',
-        },
-      });
+      reject(e);
     }
   });
 }
@@ -59,10 +49,8 @@ async function checkUsername(username) {
 async function deleteUserFromDB(id) {
   if (!id) {
     return {
-      res: {
-        success: false,
-        message: 'Invalid request. user id is required!',
-      },
+      success: false,
+      message: 'Invalid request. user id is required!',
     };
   }
   try {
@@ -82,10 +70,8 @@ async function deleteUserFromDB(id) {
     return { success: true };
   } catch (e) {
     return {
-      res: {
-        success: false,
-        message: 'Internal server error!',
-      },
+      success: false,
+      message: 'Internal server error!',
     };
   }
 }
@@ -93,10 +79,8 @@ async function deleteUserFromDB(id) {
 async function deleteManyUserFromDB(ids) {
   if (!ids || !Array.isArray(ids) || ids.length === 0) {
     return {
-      res: {
-        success: false,
-        message: 'Invalid request. user id is required!',
-      },
+      success: false,
+      message: 'Invalid request. user id is required!',
     };
   }
   try {
@@ -116,11 +100,10 @@ async function deleteManyUserFromDB(ids) {
     // users deleted successfully
     return { success: true };
   } catch (e) {
+    console.log(e);
     return {
-      res: {
-        success: false,
-        message: 'Internal server error!',
-      },
+      success: false,
+      message: 'Internal server error!',
     };
   }
 }
@@ -130,10 +113,8 @@ async function addNewUser(data) {
   // because username is required and uniq
   if (!data.username) {
     return {
-      res: {
-        success: false,
-        message: 'Invalid request. username is required!',
-      },
+      success: false,
+      message: 'Invalid request. username is required!',
     };
   }
 
@@ -150,11 +131,10 @@ async function addNewUser(data) {
     const response = await createUser(data);
     return response;
   } catch (e) {
+    console.log(e);
     return {
-      res: {
-        success: false,
-        message: 'Internal server error!',
-      },
+      success: false,
+      message: 'Internal server error!',
     };
   }
 }

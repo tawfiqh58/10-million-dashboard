@@ -1,4 +1,8 @@
-const { addNewUser,deleteUserFromDB,deleteManyUserFromDB } = require('../services/user-service');
+const {
+  addNewUser,
+  deleteUserFromDB,
+  deleteManyUserFromDB,
+} = require('../services/user-service');
 
 module.exports = {
   createUser: async (req, res) => {
@@ -6,7 +10,7 @@ module.exports = {
       const response = await addNewUser(req.body);
       return res.status(200).json(response);
     } catch (e) {
-      res.status(500).json(e.res);
+      res.status(500).json({ error: e });
     }
   },
   deleteUser: async (req, res) => {
@@ -14,7 +18,7 @@ module.exports = {
       const response = await deleteUserFromDB(req.params.id);
       return res.status(200).json(response);
     } catch (e) {
-      res.status(500).json(e.res);
+      res.status(500).json({ error: e });
     }
   },
   deleteMany: async (req, res) => {
@@ -22,7 +26,7 @@ module.exports = {
       const response = await deleteManyUserFromDB(req.body.ids);
       return res.status(200).json(response);
     } catch (e) {
-      res.status(500).json(e.res);
+      res.status(500).json({ error: e });
     }
   },
 };

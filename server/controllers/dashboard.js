@@ -6,7 +6,7 @@ module.exports = {
       const response = await getDashboardData();
       res.status(200).json(response);
     } catch (e) {
-      res.status(500).json(e.res);
+      res.status(500).json({ error: e });
     }
   },
 };

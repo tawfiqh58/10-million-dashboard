@@ -14,7 +14,7 @@ const SMALL_CHUNK = 10000;
 // This method will generate a chunk of fake user
 // depending on the total db user count and given
 // fake user count
-function generateFakeUser(currentDBUserCount, fakeUserCount) {
+function _generateFakeUser(currentDBUserCount, fakeUserCount) {
   const fakeUserArray = [];
   const now = Date.now();
 
@@ -49,7 +49,7 @@ function generateFakeUser(currentDBUserCount, fakeUserCount) {
 }
 
 // Bulk fake user insertion method
-async function bulkUserInsertion(dbUserCount, requestedFakeUserCount) {
+async function _bulkUserInsertion(dbUserCount, requestedFakeUserCount) {
   return new Promise(async (resolve, reject) => {
     console.log(
       'dbUserCount',
@@ -70,7 +70,7 @@ async function bulkUserInsertion(dbUserCount, requestedFakeUserCount) {
       for (let i = 0; i < chunkCount; i++) {
         console.log('chunk', i);
         await User.insertMany(
-          generateFakeUser(totalInsertedUserCount, SMALL_CHUNK)
+          _generateFakeUser(totalInsertedUserCount, SMALL_CHUNK)
         );
         totalInsertedUserCount = totalInsertedUserCount + SMALL_CHUNK;
       }
@@ -82,8 +82,11 @@ async function bulkUserInsertion(dbUserCount, requestedFakeUserCount) {
 
     // Insert extras
     try {
-      await User.insertMany(generateFakeUser(totalInsertedUserCount, extra));
-      return resolve('Successfully inserted fake users!');
+      await User.insertMany(_generateFakeUser(totalInsertedUserCount, extra));
+      return resolve({
+        success: true,
+        message: 'Successfully inserted fake users!',
+      });
     } catch (e) {
       console.log(e);
       return reject(e);
@@ -112,7 +115,7 @@ async function insertFakeUserToMongoDB(requestedCount) {
 
       try {
         const result = await User.insertMany(
-          generateFakeUser(currentDBUserCount, requestedCount)
+          _generateFakeUser(currentDBUserCount, requestedCount)
         );
 
         // Update dashboard status
@@ -121,7 +124,7 @@ async function insertFakeUserToMongoDB(requestedCount) {
         return resolve({ message: 'Fake user created successfully!' });
       } catch (e) {
         console.log(e);
-        return reject({ res: { message: 'Internal server error!' } });
+        return reject(e);
       }
     } else {
       try {
@@ -137,7 +140,7 @@ async function insertFakeUserToMongoDB(requestedCount) {
         // higher than 'SMALL_AMOUNT_FAKE_USER'
 
         // This may take time to finish insertion
-        bulkUserInsertion(currentDBUserCount, userCreationCount).then(
+        _bulkUserInsertion(currentDBUserCount, userCreationCount).then(
           (err, status) => {
             // Ignore error and re-order whatever the DB has.
 
@@ -152,7 +155,7 @@ async function insertFakeUserToMongoDB(requestedCount) {
         });
       } catch (e) {
         console.log(e);
-        return reject({ res: { message: 'Internal server error!' } });
+        return reject(e);
       }
     }
   });
@@ -170,10 +173,10 @@ async function cleanUpDB() {
       // Broadcast database status
       global.io.emit('dashboard', { success: true, data: {} });
 
-      return resolve({ message: 'Database cleaned!' });
+      return resolve({ success: true, message: 'Database cleaned!' });
     } catch (e) {
       console.log(e);
-      return reject({ res: { message: 'Something wrong. Try again later' } });
+      return reject(e);
     }
   });
 }

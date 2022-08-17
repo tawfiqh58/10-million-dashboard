@@ -14,8 +14,7 @@ module.exports = {
       const response = await insertFakeUserToMongoDB(requestedFakeUserCount);
       return res.json(response);
     } catch (e) {
-      console.log(e);
-      res.status(500).json({ message: 'Internal server error!' });
+      res.status(500).json({ error: e });
     }
   },
 
@@ -24,7 +23,7 @@ module.exports = {
       const response = await cleanUpDB();
       res.json(response);
     } catch (e) {
-      res.status(500).json(e.res);
+      res.status(500).json({ error: e });
     }
   },
 };

@@ -300,37 +300,32 @@ export default function EnhancedTable({ data }) {
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
+  const handleDeleteClick = () => {
+    if (selected.length > 1) {
+      UserService.deleteMany(selected)
+        .then((res) => {
+          setSelected([]);
+        })
+        .catch(({ response }) => {
+          alert(response);
+        });
+    } else if (selected.length === 1) {
+      UserService.delete(selected[0])
+        .then((res) => {
+          setSelected([]);
+        })
+        .catch(({ response }) => {
+          alert(response);
+        });
+    }
+  };
+
   return (
     <ItemCard>
       <Paper sx={{ mb: 2 }}>
         <EnhancedTableToolbar
           numSelected={selected.length}
-          onDelete={() => {
-            // console.log(selected);
-            if (selected.length > 1) {
-              UserService.deleteMany(selected)
-                .then((res) => {
-                  // console.log(res.data);
-                  setSelected([]);
-                  // alert('Successfull');
-                })
-                .catch(({ response }) => {
-                  // console.log(response);
-                  alert(response);
-                });
-            } else if (selected.length === 1) {
-              UserService.delete(selected[0])
-                .then((res) => {
-                  // console.log(res.data);
-                  setSelected([]);
-                  // alert('Successfull');
-                })
-                .catch(({ response }) => {
-                  // console.log(response);
-                  alert(response);
-                });
-            }
-          }}
+          onDelete={handleDeleteClick}
         />
         <TableContainer>
           <Table

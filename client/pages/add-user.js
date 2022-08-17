@@ -45,7 +45,6 @@ export default function () {
       if (response.data.success) {
         router.push('/');
       } else {
-        // console.log(response.data);
         if (response.data.nameExist) {
           alert('This username is already exist!');
           setNameTaken(true);

@@ -106,7 +106,7 @@ async function deleteManyUserFromDB(ids) {
       // failed to delete users
       return { success: false };
     }
-    
+
     // Update redis state for instant change
     removeManyFromRedis(ids);
 
@@ -150,12 +150,12 @@ async function addNewUser(data) {
     const response = await createUser(data);
     return response;
   } catch (e) {
-    reject({
+    return {
       res: {
         success: false,
         message: 'Internal server error!',
       },
-    });
+    };
   }
 }
 

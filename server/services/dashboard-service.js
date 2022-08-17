@@ -10,7 +10,7 @@ async function getDashboardData() {
 
     if (redisData) {
       // send data from redis cache
-      resolve({ success: true, data: JSON.parse(redisData) });
+      return resolve({ success: true, data: JSON.parse(redisData) });
     } else {
       try {
         // When redis is empty rebuild dashboard data
@@ -19,7 +19,7 @@ async function getDashboardData() {
         // Store update status in redis cache
         await redisDB.Client.set('dashboard', JSON.stringify(dashboardData));
 
-        resolve({ success: true, data: dashboardData });
+        return resolve({ success: true, data: dashboardData });
       } catch (e) {
         console.log(e);
         reject({ res: { message: 'Internal server error' } });

@@ -83,7 +83,7 @@ async function bulkUserInsertion(dbUserCount, requestedFakeUserCount) {
     // Insert extras
     try {
       await User.insertMany(generateFakeUser(totalInsertedUserCount, extra));
-      resolve('Successfully inserted fake users!');
+      return resolve('Successfully inserted fake users!');
     } catch (e) {
       console.log(e);
       return reject(e);
@@ -96,14 +96,13 @@ async function bulkUserInsertion(dbUserCount, requestedFakeUserCount) {
 // with pending message
 async function insertFakeUserToMongoDB(requestedCount) {
   return new Promise(async (resolve, reject) => {
-
     // First check current database user count
     const currentDBUserCount = await User.countDocuments();
 
-    // If user count exceed 10M then 
+    // If user count exceed 10M then
     // don't allow fake user insertion
     if (currentDBUserCount > TEN_MILLION_USER) {
-      resolve({ message: 'Database already has 10 million user.' });
+      return resolve({ message: 'Database already has 10 million user.' });
     }
 
     if (requestedCount <= SMALL_CHUNK) {
@@ -119,10 +118,10 @@ async function insertFakeUserToMongoDB(requestedCount) {
         // Update dashboard status
         userCreated();
 
-        resolve({ message: 'Fake user created successfully!' });
+        return resolve({ message: 'Fake user created successfully!' });
       } catch (e) {
         console.log(e);
-        reject({ res: { message: 'Internal server error!' } });
+        return reject({ res: { message: 'Internal server error!' } });
       }
     } else {
       try {
@@ -147,13 +146,13 @@ async function insertFakeUserToMongoDB(requestedCount) {
           }
         );
 
-        resolve({
+        return resolve({
           message:
             'Your request is accepted. Wait for a moment to complete the process.',
         });
       } catch (e) {
         console.log(e);
-        reject({ res: { message: 'Internal server error!' } });
+        return reject({ res: { message: 'Internal server error!' } });
       }
     }
   });
@@ -171,10 +170,10 @@ async function cleanUpDB() {
       // Broadcast database status
       global.io.emit('dashboard', { success: true, data: {} });
 
-      resolve({ message: 'Database cleaned!' });
+      return resolve({ message: 'Database cleaned!' });
     } catch (e) {
       console.log(e);
-      reject({ res: { message: 'Something wrong. Try again later' } });
+      return reject({ res: { message: 'Something wrong. Try again later' } });
     }
   });
 }
